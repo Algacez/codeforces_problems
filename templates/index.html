@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Codeforces 题库</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        h1 { color: #333; }
+        .stats { color: #666; margin-bottom: 20px; }
+        .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+        .tag { padding: 8px 16px; background: #e0e0e0; border-radius: 20px; cursor: pointer; text-decoration: none; color: #333; }
+        .tag:hover { background: #d0d0d0; }
+        .tag.active { background: #1976d2; color: white; }
+        .problems { display: grid; gap: 15px; }
+        .problem { padding: 15px; background: #fafafa; border-left: 4px solid #1976d2; border-radius: 4px; }
+        .problem-title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .problem-meta { color: #666; font-size: 14px; }
+        .rating { color: #f57c00; font-weight: bold; }
+        .solved { color: #388e3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Codeforces 题库</h1>
+        <div class="stats">总题数: {{ total_count }}</div>
+
+        <div class="tags">
+            {% for tag in tags %}
+            <a href="?tag={{ tag }}" class="tag {% if tag == selected_tag %}active{% endif %}">
+                {{ tag_cn.get(tag, tag) }}
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if selected_tag %}
+        <h2>{{ tag_cn.get(selected_tag, selected_tag) }} ({{ problems|length }} 题)</h2>
+        <div class="problems">
+            {% for prob in problems %}
+            <div class="problem">
+                <div class="problem-title">
+                    <a href="https://codeforces.com/problemset/problem/{{ prob.contestId }}/{{ prob.index }}" target="_blank">
+                        {{ prob.contestId }}{{ prob.index }} - {{ prob.name }}
+                    </a>
+                </div>
+                <div class="problem-meta">
+                    难度: <span class="rating">{{ prob.rating }}</span> |
+                    通过: <span class="solved">{{ prob.solvedCount }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>请选择一个标签查看题目</p>
+        {% endif %}
+    </div>
+</body>
+</html>
