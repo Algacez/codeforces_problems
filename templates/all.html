@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>所有题目 - Codeforces 题库</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        h1 { color: #333; }
+        .nav { margin-bottom: 20px; }
+        .nav a { padding: 10px 20px; background: #1976d2; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px; }
+        .nav a:hover { background: #1565c0; }
+        .stats { color: #666; margin-bottom: 20px; }
+        .problems { display: grid; gap: 15px; margin-bottom: 30px; }
+        .problem { padding: 15px; background: #fafafa; border-left: 4px solid #1976d2; border-radius: 4px; }
+        .problem-title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .problem-meta { color: #666; font-size: 14px; }
+        .rating { color: #f57c00; font-weight: bold; }
+        .solved { color: #388e3c; }
+        .pagination { display: flex; gap: 10px; justify-content: center; align-items: center; }
+        .pagination a, .pagination span { padding: 8px 12px; background: #e0e0e0; border-radius: 4px; text-decoration: none; color: #333; }
+        .pagination a:hover { background: #d0d0d0; }
+        .pagination .current { background: #1976d2; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">按标签浏览</a>
+            <a href="/all">所有题目</a>
+        </div>
+
+        <h1>所有题目</h1>
+        <div class="stats">
+            总题数: {{ total_count }} | 第 {{ page }} / {{ total_pages }} 页 |
+            排序:
+            {% if order == 'desc' %}
+            <strong>降序</strong> | <a href="?page={{ page }}&order=asc">升序</a>
+            {% else %}
+            <a href="?page={{ page }}&order=desc">降序</a> | <strong>升序</strong>
+            {% endif %}
+        </div>
+
+        <div class="problems">
+            {% for prob in problems %}
+            <div class="problem">
+                <div class="problem-title">
+                    <a href="https://codeforces.com/problemset/problem/{{ prob.contestId }}/{{ prob.index }}" target="_blank">
+                        {{ prob.contestId }}{{ prob.index }} - {{ prob.name }}
+                    </a>
+                </div>
+                <div class="problem-meta">
+                    难度: <span class="rating">{{ prob.rating }}</span> |
+                    通过: <span class="solved">{{ prob.solvedCount }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            {% if page > 1 %}
+            <a href="?page=1&order={{ order }}">首页</a>
+            <a href="?page={{ page - 1 }}&order={{ order }}">上一页</a>
+            {% endif %}
+
+            {% for p in range([page - 2, 1]|max, [page + 2, total_pages]|min + 1) %}
+                {% if p == page %}
+                <span class="current">{{ p }}</span>
+                {% else %}
+                <a href="?page={{ p }}&order={{ order }}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page < total_pages %}
+            <a href="?page={{ page + 1 }}&order={{ order }}">下一页</a>
+            <a href="?page={{ total_pages }}&order={{ order }}">末页</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

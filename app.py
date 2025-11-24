@@ -107,5 +107,26 @@ def index():
                          total_count=len(problems),
                          tag_cn=TAG_CN)
 
+@app.route('/all')
+def all_problems():
+    problems = load_problems()
+    page = int(request.args.get('page', 1))
+    order = request.args.get('order', 'desc')
+    per_page = 50
+
+    if order == 'asc':
+        problems = list(reversed(problems))
+
+    start = (page - 1) * per_page
+    end = start + per_page
+    total_pages = (len(problems) + per_page - 1) // per_page
+
+    return render_template('all.html',
+                         problems=problems[start:end],
+                         page=page,
+                         total_pages=total_pages,
+                         total_count=len(problems),
+                         order=order)
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
